@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <style>
+        .selectedDice{
+            background-color: orange;
+        }
+    </style>
+    <title>Yahtzee - Innovation Week - Kenny Passenier</title>
+</head>
+<body>
+<div class="container">
+
+    <div id="errors">
+        <div id="successAlert" class="alert alert-success text-center" role="alert">
+            Succesfully connected to Raspberry Pi
+        </div>
+        <div id="errorAlert" class="alert alert-danger text-center" role="alert">
+            Could not connect to Raspberry Pi
+        </div>
+    </div>
+
+    <div id="raspberryConnection">
+        <div class="form-group text-center"><br>
+            <h1>Enter the URL of the Raspberry Pi</h1><br>
+            <input type="text" id="raspberryUrl" class="form-control input-lg text-center"><br>
+            <button type="button" class="btn btn-secondary btn-lg" id="raspberryUrlButton">Submit</button>
+        </div>
+    </div>
+
+    <div id="amountOfPlayers" class="text-center">
+        <h3>Choose the amount of players for this game</h3>
+        <input id="amountOfPlayersInput" type="number" class="form-control input-lg text-center"><br>
+        <button type="button" class="btn btn-secondary btn-lg" id="amountOfPlayersButton">Submit</button>
+    </div>
+
+    <div id="playerNames" class="text-center">
+        <h3>Player names</h3>
+        <button type="button" id='startGamebutton' class='btn btn-lg btn-secondary'>Start playing</button>
+    </div>
+
+
+    <div id="game">
+        <table class="table text-center">
+            <tbody>
+            <tr>
+                <td class="dice">
+                    <img id="dieOne" class="dieImage" src="./images/startTurn.png" height="50" width="50">
+                </td>
+                <td class="dice">
+                    <img id="dieTwo" class="dieImage" src="./images/startTurn.png" height="50" width="50">
+                </td>
+                <td class="dice">
+                    <img id="dieThree" class="dieImage" src="./images/startTurn.png" height="50" width="50">
+                </td>
+                <td class="dice">
+                    <img id="dieFour" class="dieImage" src="./images/startTurn.png" height="50" width="50">
+                </td>
+                <td class="dice">
+                    <img id="dieFive" class="dieImage" src="./images/startTurn.png" height="50" width="50">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <button type="button" id='rollDiceButton' class='btn btn-lg btn-outline-warning'>Roll the dice</button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5" id="turns">
+                    3 turns left.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+
+
+        <table class="table table-bordered text-center">
+            <thead class="bg-warning text-white">
+            <tr id="activeNameUpper" >
+                <th>Upper section</th>
+                <th>How to score</th>
+                <th id="activePlayerNameUpper">Name #1</th>
+                <th>Odds</th>
+                <th>Current roll</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr id="activeOnes">
+                <td>Ones</td>
+                <td>Count and add only ones</td>
+                <td id="activePlayerOnes"></td>
+                <td id="activePlayerOnesOdds"></td>
+                <td id="activePlayerOnesCurrentRoll">
+                    <button id="activePlayerOnesCurrentRollButton" class="btn btn-sm btn-outline-warning">TEST</button>
+                </td>
+            </tr>
+            <tr id="activeTwos">
+                <td>Twos</td>
+                <td>Count and add only twos</td>
+                <td id="activePlayerTwos"></td>
+                <td id="activePlayerTwosOdds"></td>
+                <td id="activePlayerTwosCurrentRoll">
+                    <button id="activePlayerTwosCurrentRollButton" class="btn btn-sm btn-outline-warning">TEST</button>
+                </td>
+            </tr>
+            <tr id="activeThrees">
+                <td>Threes</td>
+                <td>Count and add only threes</td>
+                <td id="activePlayerThrees"></td>
+                <td id="activePlayerThreesOdds"></td>
+                <td id="activePlayerThreesCurrentRoll">
+                    <button id="activePlayerThreesCurrentRollButton" class="btn btn-sm btn-outline-warning">TEST</button>
+                </td>
+            </tr>
+            <tr id="activeFours">
+                <td>Fours</td>
+                <td>Count and add only fours</td>
+                <td id="activePlayerFours"></td>
+                <td id="activePlayerFoursOdds"></td>
+                <td id="activePlayerFoursCurrentRoll">
+                    <button id="activePlayerFoursCurrentRollButton" class="btn btn-sm btn-outline-warning">TEST</button>
+                </td>
+            </tr>
+            <tr id="activeFives">
+                <td>Fives</td>
+                <td>Count and add only fives</td>
+                <td id="activePlayerFives"></td>
+                <td id="activePlayerFivesOdds"></td>
+                <td id="activePlayerFivesCurrentRoll">
+                    <button id="activePlayerFivesCurrentRollButton" class="btn btn-sm btn-outline-warning">TEST</button>
+                </td>
+            </tr>
+            <tr id="activeSixes">
+                <td>Sixes</td>
+                <td>Count and add only sixes</td>
+                <td id="activePlayerSixes"></td>
+                <td id="activePlayerSixesOdds"></td>
+                <td id="activePlayerSixesCurrentRoll">
+                    <button id="activePlayerSixesCurrentRollButton" class="btn btn-sm btn-outline-warning">TEST</button>
+                </td>
+            </tr>
+            <tr id="activeOneToSixTotal">
+                <td>TOTAL SCORE</td>
+                <td>--></td>
+                <td colspan="3" id="activePlayerOneToSixTotal"></td>
+            </tr>
+            <tr id="activeBonus">
+                <td>BONUS (total >= 63)</td>
+                <td> SCORE 35</td>
+                <td colspan="3" id="activePlayerBonus"></td>
+            </tr>
+            <tr id="activeUpperTotal">
+                <td>TOTAL UPPER SECTION</td>
+                <td>--></td>
+                <td colspan="3" id="activePlayerUpperTotal"></td>
+            </tr>
+            </tbody>
+            <thead class="bg-warning text-white">
+            <tr id="activeNameLower" >
+                <th>Lower section</th>
+                <th>How to score</th>
+                <th id="activePlayerNameLower">Name #1</th>
+                <th>Odds</th>
+                <th>Current roll</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr id="activeThreeOfAKind">
+                <td>3 of a kind</td>
+                <td>Add total of all dice</td>
+                <td id="activePlayerThreeOfAKind"></td>
+                <td id="activePlayerThreeOfAKindOdds"></td>
+                <td id="activePlayerThreeOfAKindCurrentRoll">
+                    <button id="activePlayerThreeOfAKindCurrentRollButton" class="btn btn-sm btn-outline-warning">TEST</button>
+                </td>
+            </tr>
+            <tr id="activeFourOfAKind">
+                <td>4 of a kind</td>
+                <td>Add total of all dice</td>
+                <td id="activePlayerFourOfAKind"></td>
+                <td id="activePlayerFourOfAKindOdds"></td>
+                <td id="activePlayerFourOfAKindCurrentRoll">
+                    <button id="activePlayerFourOfAKindCurrentRollButton" class="btn btn-sm btn-outline-warning">TEST</button>
+                </td>
+            </tr>
+            <tr id="activeFullHouse">
+                <td>Full house</td>
+                <td>SCORE 25</td>
+                <td id="activePlayerFullHouse"></td>
+                <td id="activePlayerFullHouseOdds"></td>
+                <td id="activePlayerFullHouseCurrentRoll">
+                    <button id="activePlayerFullHouseCurrentRollButton" class="btn btn-sm btn-outline-warning">TEST</button>
+                </td>
+            </tr>
+            <tr id="activeSmallStraight">
+                <td>Small straight</td>
+                <td>SCORE 30</td>
+                <td id="activePlayerSmallStraight"></td>
+                <td id="activePlayerSmallStraightOdds"></td>
+                <td id="activePlayerSmallStraightCurrentRoll">
+                    <button id="activePlayerSmallStraightCurrentRollButton" class="btn btn-sm btn-outline-warning">TEST</button>
+                </td>
+            </tr>
+            <tr id="activeLargeStraight">
+                <td>Large straight</td>
+                <td>SCORE 40</td>
+                <td id="activePlayerLargeStraight"></td>
+                <td id="activePlayerLargeStraightOdds"></td>
+                <td id="activePlayerLargeStraightCurrentRoll">
+                    <button id="activePlayerLargeStraightCurrentRollButton" class="btn btn-sm btn-outline-warning">TEST</button>
+                </td>
+            </tr>
+            <tr id="activeYahtzee">
+                <td>YAHTZEE</td>
+                <td>SCORE 50</td>
+                <td id="activePlayerYahtzee"></td>
+                <td id="activePlayerYahtzeeOdds"></td>
+                <td id="activePlayerYahtzeeCurrentRoll">
+                    <button id="activePlayerYahtzeeCurrentRollButton" class="btn btn-sm btn-outline-warning">TEST</button>
+                </td>
+            </tr>
+            <tr id="activeChance">
+                <td>Chance</td>
+                <td>Add total of all dice</td>
+                <td id="activePlayerChance"></td>
+                <td id="activePlayerChanceOdds"></td>
+                <td id="activePlayerChanceCurrentRoll">
+                    <button id="activePlayerChanceCurrentRollButton" class="btn btn-sm btn-outline-warning">TEST</button>
+                </td>
+            </tr>
+            <tr id="activeLowerSectionTotal">
+                <td>Lower section total</td>
+                <td>--></td>
+                <td colspan="3" id="activePlayerLowerSectionTotal"></td>
+            </tr>
+            <tr id="activeUpperSectionTotal">
+                <td>Upper section total</td>
+                <td>--></td>
+                <td colspan="3" id="activePlayerUpperSectionTotal"></td>
+            </tr>
+            <tr id="activeGrandTotal">
+                <td>Grand total</td>
+                <td>--></td>
+                <td colspan="3" id="activePlayerGrandTotal"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-bordered text-center">
+            <thead class="thead-dark">
+            <tr id="personalNameUpper" >
+                <th>Upper section</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr id="personalOnes">
+                <td>Ones</td>
+            </tr>
+            <tr id="personalTwos">
+                <td>Twos</td>
+            </tr>
+            <tr id="personalThrees">
+                <td>Threes</td>
+            </tr>
+            <tr id="personalFours">
+                <td>Fours</td>
+            </tr>
+            <tr id="personalFives">
+                <td>Fives</td>
+            </tr>
+            <tr id="personalSixes">
+                <td>Sixes</td>
+            </tr>
+            <tr id="personalOneToSixTotal">
+                <td>TOTAL SCORE</td>
+            </tr>
+            <tr id="personalBonus">
+                <td>BONUS (total >= 63)</td>
+            </tr>
+            <tr id="personalUpperTotal">
+                <td>TOTAL UPPER SECTION</td>
+            </tr>
+            </tbody>
+            <thead class="thead-dark">
+            <tr id="personalNameLower">
+                <th>Lower section</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr id="personalThreeOfAKind">
+                <td>3 of a kind</td>
+            </tr>
+            <tr id="personalFourOfAKind">
+                <td>4 of a kind</td>
+            </tr>
+            <tr id="personalFullHouse">
+                <td>Full house</td>
+            </tr>
+            <tr id="personalSmallStraight">
+                <td>Small straight</td>
+            </tr>
+            <tr id="personalLargeStraight">
+                <td>Large straight</td>
+            </tr>
+            <tr id="personalYahtzee">
+                <td>YAHTZEE</td>
+            </tr>
+            <tr id="personalChance">
+                <td>Chance</td>
+            </tr>
+            <tr id="personalLowerSectionTotal">
+                <td>Lower section total</td>
+            </tr>
+            <tr id="personalUpperSectionTotal">
+                <td>Upper section total</td>
+            </tr>
+            <tr id="personalGrandTotal">
+                <td>Grand total</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="yahtzeeCounter.js"></script>
+<script src="yahtzeePlayer.js"></script>
+<script src="oddsCounter.js"></script>
+<script src="yahtzee.js"></script>
+</body>
+</html>
