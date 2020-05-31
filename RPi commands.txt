@@ -40,7 +40,7 @@ sudo pip3 install flask-cors --upgrade
 
 
 
-// openCV 3 installation - reference: https://www.pyimagesearch.com/2017/09/04/raspbian-stretch-install-opencv-3-python-on-your-raspberry-pi/
+// openCV 3 installation -
 // install cmake
 sudo apt-get install build-essential cmake pkg-config
 // packages that can handle image file formats
@@ -145,10 +145,3 @@ CONF_SWAPSIZE=100
 sudo /etc/init.d/dphys-swapfile stop
 sudo /etc/init.d/dphys-swapfile start
 
-
-
-
-
-
-
-ngrok tutorial: https://thisdavej.com/how-to-host-a-raspberry-pi-web-server-on-the-internet-with-ngrok/

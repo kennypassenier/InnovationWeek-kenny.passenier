@@ -499,7 +499,6 @@ async function getDiceRoll(){
     catch(error){
         console.warn(error);
     }
-
 }
 
 function toggleRollButtons(enabled){

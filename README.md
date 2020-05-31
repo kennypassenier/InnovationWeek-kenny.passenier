@@ -13,3 +13,15 @@ Dan kan je beginnen met het spel.
 
 In het bestand credentials.txt staan alle gegevens om in te loggen op benodigde accounts.
 In het bestand RPi commands.txt staan de gebruikte commando's die nodig zijn om alle software op de Raspberry Pi in te stellen.
+
+Referenties: 
+
+OpenCV3 installatie voor op de Raspberry Pi:
+- https://www.pyimagesearch.com/2017/09/04/raspbian-stretch-install-opencv-3-python-on-your-raspberry-pi/
+
+Ngrok:
+-  https://thisdavej.com/how-to-host-a-raspberry-pi-web-server-on-the-internet-with-ngrok/
+
+Het script voor de herkenning van de dobbelstenen: 
+- https://github.com/andli/dicecounter/blob/master/count.py
+Dit heb ik wel moeten aanpassen, om de juiste instellingen te bekomen, en om het te integreren in de flask webserver.
