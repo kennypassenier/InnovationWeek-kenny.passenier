@@ -8,3 +8,8 @@ Ngrok-notify zorgt ervoor dat het adres van die tunnel naar een vooropgesteld em
 
 Dan surf je naar de website/draai je lokaal het bestand yahtzee.html en kopieer je het ngrok adres om verbinding te maken.
 Dan kan je beginnen met het spel. 
+
+-----------------
+
+In het bestand credentials.txt staan alle gegevens om in te loggen op benodigde accounts.
+In het bestand RPi commands.txt staan de gebruikte commando's die nodig zijn om alle software op de Raspberry Pi in te stellen.
