@@ -1,0 +1,154 @@
+// update pi
+sudo apt-get update && sudo apt-get upgrade && sudo rpi-update
+// add nodesource packages to apt
+curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+// install node
+sudo apt install -y nodejs
+
+
+// install http-server globally so it's available as a command everywhere on the RPi instead of only the current directory
+sudo npm install -g http-server
+
+//install ngrok as globally available executable
+sudo npm install --unsafe-perm -g ngrok
+
+//install ngrok-notify
+sudo npm install --unsafe-perm -g ngrok-notify
+// make directory in root of home directory and navigate to it
+mkdir ~/ngrok && cd $_
+// initialize the config files
+ngrok-notify init
+// send email with current url
+ngrok-notify http portnumber -e
+// automatically start our webserver and ngrok-notify with process manager 2
+// install pm2 as global executable
+sudo npm install -g pm2@latest
+//register apps with pm2
+     
+
+sudo pm2 start ngrok-notify -- http 80 -e // from ngrok dir
+
+//running ngrok:
+ngrok http portnumber
+
+// flask script didn't work with ngrok so I have added it to /etc/rc.local
+added python3 /home/pi/innovationProject/server.py before the exit 0
+
+
+//install flask-cors
+sudo pip3 install flask-cors --upgrade
+
+
+
+// openCV 3 installation - reference: https://www.pyimagesearch.com/2017/09/04/raspbian-stretch-install-opencv-3-python-on-your-raspberry-pi/
+// install cmake
+sudo apt-get install build-essential cmake pkg-config
+// packages that can handle image file formats
+sudo apt-get install libjpeg-dev libtiff5-dev libjasper-dev libpng12-dev
+// Video IO packages
+sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
+sudo apt-get install libxvidcore-dev libx264-dev
+// sub-module highgui to display images on screen and build basic GUI's
+sudo apt-get install libgtk2.0-dev libgtk-3-dev
+// optimization libraries
+sudo apt-get install libatlas-base-dev gfortran
+
+// the opencv part
+cd ~
+sudo wget -O opencv.zip https://github.com/Itseez/opencv/archive/3.3.0.zip
+sudo unzip opencv.zip
+
+// include opencv_contrib
+sudo wget -O opencv_contrib.zip https://github.com/Itseez/opencv_contrib/archive/3.3.0.zip
+sudo unzip opencv_contrib.zip
+// update pip install
+sudo wget https://bootstrap.pypa.io/get-pip.py
+sudo python get-pip.py
+sudo python3 get-pip.py
+// virtualenv
+sudo pip install virtualenv virtualenvwrapper
+
+// add these lines to ~/.profile
+export WORKON_HOME=$HOME/.virtualenvs
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
+source /usr/local/bin/virtualenvwrapper.sh
+export VIRTUALENVWRAPPER_ENV_BIN_DIR=bin
+
+// reload profile
+source ~/.profile
+
+// create virtualenv
+mkvirtualenv cv -p python3
+
+// work in the cv environment
+workon cv
+
+// install numpy
+pip install numpy
+
+// build opencv
+ cd ~/opencv-3.3.0/
+mkdir build
+cd build
+sudo cmake -D CMAKE_BUILD_TYPE=RELEASE \
+    -D CMAKE_INSTALL_PREFIX=/usr/local \
+    -D INSTALL_PYTHON_EXAMPLES=ON \
+    -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib-3.3.0/modules \
+    -D BUILD_EXAMPLES=ON ..
+
+
+
+//Open your /etc/dphys-swapfile  and then edit the CONF_SWAPSIZE  variable:
+# set size to absolute value, leaving empty (default) then uses computed value
+#   you most likely don't want this, unless you have an special disk situation
+# CONF_SWAPSIZE=100
+CONF_SWAPSIZE=1024
+// restart service
+sudo /etc/init.d/dphys-swapfile stop
+sudo /etc/init.d/dphys-swapfile start
+
+cd to opencv folder and then build folder
+// compile
+sudo make -j4
+// install opencv3
+sudo make install 
+sudo ldconfig
+
+// rename package name, is apparently a bug
+cd /usr/local/lib/python3.5/dist-packages/
+sudo mv cv2.cpython-35m-arm-linux-gnueabihf.so cv2.so
+
+// create simlink
+cd ~/.virtualenvs/cv/lib/python3.5/site-packages/
+ln -s /usr/local/lib/python3.5/dist-packages/cv2.so cv2.so
+
+// Test if installed correctly
+$ source ~/.profile 
+$ workon cv
+$ python
+>>> import cv2
+>>> cv2.__version__
+'3.3.0'
+>>> 
+
+//change back swap size, otherwise the sd card might get corrupted or won't last long
+
+Open your /etc/dphys-swapfile  and then edit the CONF_SWAPSIZE  variable:
+
+Raspbian Stretch: Install OpenCV 3 + Python on your Raspberry Pi
+# set size to absolute value, leaving empty (default) then uses computed value
+#   you most likely don't want this, unless you have an special disk situation
+CONF_SWAPSIZE=100
+
+// restart service
+sudo /etc/init.d/dphys-swapfile stop
+sudo /etc/init.d/dphys-swapfile start
+
+
+
+
+
+
+
+ngrok tutorial: https://thisdavej.com/how-to-host-a-raspberry-pi-web-server-on-the-internet-with-ngrok/
