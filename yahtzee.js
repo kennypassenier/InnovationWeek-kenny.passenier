@@ -15,7 +15,6 @@ $("#amountOfPlayers").hide();
 $("#playerNames").hide();
 
 function resetDice(){
-    // todo change dice into new image
     $("#dieOne").attr("src", `./images/startTurn.png`);
     $("#dieTwo").attr("src", `./images/startTurn.png`);
     $("#dieThree").attr("src", `./images/startTurn.png`);
@@ -39,7 +38,6 @@ function playNextTurn(){
             break;
         }
     }
-    console.log(`Should the game finish? ${allFinished}`);
     if(allFinished){
         console.error("THE GAME IS DONE");
 
@@ -114,7 +112,6 @@ $(".dieImage").click(function(){
     // We need to toggle the background to reflect which die are selected
 
     let source = $(this).prop("src");
-    console.log(`Source: ${source}`);
     if(source.includes("startTurn.png") || source.includes(".images/error.png")){
         return;
     }
@@ -384,7 +381,6 @@ function getOdds(diceOnHoldArray){
             oddsCounter.yahtzee++;
         }
     }
-    console.log(oddsCounter);
     return oddsCounter;
 }
 
@@ -449,7 +445,6 @@ function numberToText(number){
 }
 
 async function getDiceRoll(){
-    console.log("Start of getDiceRoll");
     try{
         const response = await raspberryPiRequest(raspberryURL, "diceroll");
 
@@ -532,10 +527,8 @@ function fillCurrentRollButtons(result){
     arr.push(result.fifth);
     console.table(arr);
     let count = new YahtzeeCounter(arr);
-    console.log(count);
 
     let diceTotal = calculateTotal(arr);
-    console.log(diceTotal);
 
 
     // Enable the buttons
